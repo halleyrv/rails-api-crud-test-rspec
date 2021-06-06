@@ -16,14 +16,22 @@ describe 'Books Api', type: :request do
   describe "POST books" do 
     it 'create new book' do
       expect {
-        post "/api/v1/books", params: {book: {title: "kllookk", author: "author" } }
+        post "/api/v1/books", params: {
+          book: { title: "kllookk" }, 
+          author: {first_name: "Cesar", last_name: "Rivera", age: 48 } 
+        }
       }.to change(Book.all,:count).by(1)
       expect(response).to have_http_status(:created)
+      expect(Author.count).to eql(1)
     end
     it "invalid values create new book" do
       expect {
-        post "/api/v1/books", params: { book: {title: "", author: "autrees"}}
+        post "/api/v1/books", params: {
+           book: {title: ""} ,
+           author: {first_name: "", last_name: "", age: nil}
+        }
       }.not_to change(Book.all, :count)
+      expect(response).to have_http_status(:unprocessable_entity)
     end
   end
 
