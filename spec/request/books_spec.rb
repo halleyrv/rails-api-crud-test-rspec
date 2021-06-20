@@ -12,7 +12,23 @@ describe 'Books Api', type: :request do
     it 'returns all books' do
       get '/api/v1/books'
       expect(response).to have_http_status(:success)
-      expect(JSON.parse(response.body).size).to eq(2)
+      expect(response_body.size).to eq(2)
+      expect(response_body).to eq(
+        [
+          {
+            'id' => 1,
+            'name' => "Quijote",
+            'author_name' => "Cesar Rivera",
+            'author_age' =>  48
+          },
+          {
+            "id"=>2, 
+            "name"=>"Planta",
+            "author_name"=>"Miguel Vasconcellos", 
+            "author_age"=>50 
+          }
+        ]
+      )
     end
   end
 
@@ -27,7 +43,7 @@ describe 'Books Api', type: :request do
       }.to change(Book.all,:count).by(1)
       expect(response).to have_http_status(:created)
       expect(Author.count).to eql(1)
-      expect(JSON.parse(response.body)).to eq(
+      expect(response_body).to eq(
         {
           'id' => 3,
           'name' => "The martian",
